@@ -7,7 +7,7 @@ MODULE data_structures
 
     !physical constants
     REAL(REAL64), PARAMETER :: epsilon0 = 1
-    REAL(REAL64), PARAMETER :: m = 3
+    REAL(REAL64), PARAMETER :: m = 1
     REAL(REAL64), PARAMETER :: q = -1
 
     TYPE :: particle
