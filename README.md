@@ -14,7 +14,7 @@ File writing: A file writer has been created that has functions to create and wr
 Data structures: A module was created which holds all of the necessary global data used in all the simulation modules. This file is USED everywhere in the code.<br>
 <br>
 ### Non-essential work.
-Build script: Basic build script with error catching.
+Build script: Basic build script with error catching.<br>
 Test potential generator: A file was written that could generate 2 simple numerical potentials for testing; one which was constant everywhere and one which constantly increases from left to write. Particles were observed to move in parabolas in this potential, which is the expected result.<br>
 <br>
 <br>
