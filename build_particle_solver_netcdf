@@ -1,0 +1,49 @@
+#!/bin/bash
+
+#Note that this bash script is heavily based on that provided in
+#PX913 workshop 7.
+
+#The error catching section of this buildscript is taken from
+#https://stackoverflow.com/questions/1024525/how-to-check-if-gcc-has-failed-returned-a-warning-or-succeeded-in-bash?noredirect=1&lq=1
+#and adapted for gfortran.
+
+#Name of main program file to compile, with version number.
+filename="main_program.f90"
+
+#All non netcdf library f90 files to compile, seperated by spaces
+myprogramfiles="data_structures.f90 create_axis.f90 testpotentialgenerator.f90 particlevelocitysolver.f90 command_line.f90 particle_write_netcdf.f90 "$filename
+
+#Name of compiled file
+outfile="output_test_2"
+
+#Name of compiler
+fc=gfortran
+#Use nf-config to grab the compile and link flags. Backticks run command and grab output
+fflags=`nf-config --fflags`
+flibs=`nf-config --flibs`
+
+#Attempt to compile.
+$fc -Wall -std=f2008 -g $fflags $myprogramfiles $flibs -o $outfile
+
+
+#test if the output from this line is non 0 (indicating compiler failiure!)
+if [ $? -ne 0 ]
+then
+    echo "Compile failed!"
+    exit 1
+fi
+
+#Test compile again, this time with warnings being treated as as errors and returned.
+#If the return value is now non-zero, the compile succeeded, but with warnings.
+$fc -Wall -Werror -std=f2008 -g $fflags $myprogramfiles $flibs -o $outfile
+if [ $? -ne 0 ]
+then
+    echo "Compile succeeded, but with warnings"
+    exit 2
+else
+    echo "Compile succeeded without warnings"
+fi
+
+#Run the game of life file with the runtime parameters specified above
+echo "Running file"
+./$outfile
