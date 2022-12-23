@@ -8,24 +8,11 @@ MODULE particle_write_netcdf
   IMPLICIT NONE
 
 
-  !INTERFACE write_to_file
-    !SUBROUTINE write_single_particle_to_file
-     ! IMPORT :: particle
-      !INTEGER, INTENT(IN) :: curr_timestep
-      !INTEGER, INTENT(OUT) :: ierr
-      !TYPE(particle),INTENT(IN) :: single_part
-      !CHARACTER(LEN=*),INTENT(IN) :: filename
-    !END SUBROUTINE write_single_particle_to_file
+  INTERFACE write_to_file
+    MODULE PROCEDURE write_single_particle_to_file
 
-    !SUBROUTINE write_particle_array_to_file
-      !IMPORT :: particle
-      !INTEGER, INTENT(IN) :: curr_timestep
-      !INTEGER, INTENT(OUT) :: ierr
-      !TYPE(particle),INTENT(IN),DIMENSION(:) :: part_arr
-      !CHARACTER(LEN=*),INTENT(IN) :: filename
-    !END SUBROUTINE write_particle_array_to_file
-  !END INTERFACE
-  SAVE
+    MODULE PROCEDURE write_particle_array_to_file
+  END INTERFACE
 
   CONTAINS
   SUBROUTINE initialise_file(filename, ierr)
@@ -207,10 +194,8 @@ MODULE particle_write_netcdf
     !(note that we need to set n_ghosts to 0 
     !as we are only saving axis values in the bulk of the array.)
     CALL create_axis(x_axis,Nx,x_axis_range)
-    PRINT*,SIZE(x_axis)
     !Create full y axis array
     CALL create_axis(y_axis,Ny,y_axis_range)
-    PRINT*,SIZE(y_axis)
     !Create particle axis
     DO i = 1,N_particles
       particle_axis(i) = i
