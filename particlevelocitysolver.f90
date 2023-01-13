@@ -11,12 +11,12 @@ MODULE particlevelocitysolver
         INTEGER :: i, j !loop variables
 
         ALLOCATE(field(Nx,Ny,2)) !field to return
-        DO j = 2,Ny+1 !loop over 2nd - 2nd to last positions in potential grid in both dimension (ignoring ghost cells)
-            DO i = 2,Nx+1
+        DO j = 1,Ny !loop over 2nd - 2nd to last positions in potential grid in both dimension (ignoring ghost cells)
+            DO i = 1,Nx
                 !get Ex
-                field(i-1,j-1,1) = (potential(i+1,j)-potential(i-1,j))/(2*dx) !assign electric field to the 1st - Nth positions in the field arrays
+                field(i,j,1) = (potential(i+1,j)-potential(i-1,j))/(2*dx) !assign electric field to the 1st - Nth positions in the field arrays
                 !get Ey
-                field(i-1,j-1,2) = (potential(i,j+1)-potential(i,j-1))/(2*dy)
+                field(i,j,2) = (potential(i,j+1)-potential(i,j-1))/(2*dy)
             END DO
         END DO
     END SUBROUTINE

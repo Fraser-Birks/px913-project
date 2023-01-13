@@ -45,7 +45,7 @@ PROGRAM MAIN
     
     CALL initialise_file(data_filename,ierr)
     !generate constant gradient potential (left to right)
-    CALL generate_const_grad_potential(0.01_REAL64)
+    CALL generate_const_grad_potential(-0.1_REAL64)
     !get electric field
     CALL get_field()
     !initialise particle(s) (takes array of particles or single particle)
