@@ -68,7 +68,7 @@ MODULE chargedensitygenerator
         DO j = 1, Ny
             DO i = 1, Nx
                 rho(i,j) = exp(-((x(i)+0.25)/0.1)**2.0_REAL64-((y(j)+0.25)/0.1)**2.0_REAL64)+ &
-                exp(-((x(i)+0.75)/0.2)**2.0_REAL64-(((y(j)-0.75)/0.2)**2.0_REAL64)) 
+                exp(-((x(i)-0.75)/0.2)**2.0_REAL64-(((y(j)-0.75)/0.2)**2.0_REAL64)) 
             END DO
         END DO
     END SUBROUTINE generate_double_charge_density
