@@ -11,6 +11,8 @@ PROGRAM potentialgenerator_tester
     Nx = 20
     Ny = 20
 
+    ALLOCATE(rho(Nx,Ny))
+
     !create axis
     x_axis_range = (/-1.0_REAL64,1.0_REAL64/)
     y_axis_range = (/-1.0_REAL64,1.0_REAL64/)

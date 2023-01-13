@@ -6,8 +6,7 @@ MODULE fieldsolver
 
     SUBROUTINE solve_gauss_seidel(charge_density)
         REAL(REAL64), DIMENSION(:,:), ALLOCATABLE, INTENT(IN) :: charge_density 
-        REAL(REAL64), DIMENSION(:,:), ALLOCATABLE :: rho, init_potential
-        REAL(REAL64), DIMENSION(:), ALLOCATABLE :: err, num_dev
+        REAL(REAL64), DIMENSION(:,:), ALLOCATABLE :: rho, init_potential, err, num_dev
         REAL(REAL64) :: tot_err, drms, norm_err, tol
         INTEGER :: i, j !loop variables
         
@@ -18,8 +17,8 @@ MODULE fieldsolver
         ! the 1D arrays range to the total number of values within th potential array
         ALLOCATE(init_potential(0:Nx+1, 0:Ny+1))
         ALLOCATE(potential(0:Nx+1, 0:Ny+1))
-        ALLOCATE(err(SIZE(potential)))
-        ALLOCATE(num_dev(SIZE(potential)))
+        ALLOCATE(err(1:Nx, 1:Ny))
+        ALLOCATE(num_dev(1:Nx, 1:Ny))
 
         ! initialise the initial potential, tolerance and noralised error 
         init_potential = 0.5_REAL64
@@ -42,14 +41,14 @@ MODULE fieldsolver
             END DO
             DO j = 1,Ny
                 DO i = 1,Nx
-                    err = abs(((potential(i-1,j)-2.0_REAL64*potential(i,j)+potential(i+1,j))/dx**2)+ &
-                    ((potential(i,j-1)-2.0_REAL64*potential(i,j)+potential(i,j+1)/dy**2))-rho(i,j))
-                    num_dev = abs((potential(i-1,j)-2.0_REAL64*potential(i,j)+potential(i+1,j))/dx**2)+ &
-                    ((potential(i,j-1)-2.0_REAL64*potential(i,j)+potential(i,j+1)/dy**2))
+                    err(i,j) = abs(((potential(i-1,j)-2.0_REAL64*potential(i,j)+potential(i+1,j))/dx**2)+ &
+                    (((potential(i,j-1)-2.0_REAL64*potential(i,j)+potential(i,j+1))/dy**2))-rho(i,j))
+                    num_dev(i,j) = (((potential(i-1,j)-2.0_REAL64*potential(i,j)+potential(i+1,j))/dx**2)+ &
+                    ((potential(i,j-1)-2.0_REAL64*potential(i,j)+potential(i,j+1))/dy**2))**2
                 END DO
             END DO
             tot_err = sum(err)
-            drms = sqrt((1.0_REAL64/SIZE(potential))*sum(num_dev))
+            drms = sqrt((1.0_REAL64/SIZE(err))*sum(num_dev))
             IF (drms == 0.0_REAL64) THEN
                 error stop
             END IF
