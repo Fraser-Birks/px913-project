@@ -25,9 +25,6 @@ MODULE particlevelocitysolver
         TYPE(particle), INTENT(INOUT) :: part
         INTEGER, DIMENSION(2) :: cell_coords
         REAL(REAL64) :: Ex,Ey
-
-        part%position = (/0.0_REAL64,0.0_REAL64/)
-        part%velocity = (/0.0_REAL64,0.01_REAL64/)
         
         !get initial cell coords for particle
         cell_coords(1) = FLOOR((part%position(1)+1.0_REAL64)/dx)+1
