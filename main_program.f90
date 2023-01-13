@@ -4,13 +4,46 @@ PROGRAM MAIN
     USE particlevelocitysolver
     USE domain_tools
     USE particle_write_netcdf
+    USE chargedensitygenerator
+    USE fieldsolver
+    USE command_line
     IMPLICIT NONE
     TYPE(particle),DIMENSION(:),ALLOCATABLE :: part
     !TYPE(particle) :: part
     INTEGER :: timesteps_elapsed
     INTEGER :: ierr
     CHARACTER(LEN=*), PARAMETER :: data_filename = 'particle_simulation_data'
-
+    CHARACTER(LEN = 7) :: problem
+    LOGICAL :: success
+    !----------------------READ FROM COMMAND LINE----------------------!
+    ! Calls and storts all the arguments passed in via the command line
+    CALL parse_args
+    ! Checks each argument provided is of the right type and ensures that both
+    ! lower and upper case variable names are recognised
+    ! Returns 'Could not read in <argument> if any of the arguments could not
+    ! be read in successfully 
+    success = get_arg('nx', Nx) .OR. get_arg('Nx', Nx)
+    IF (success) THEN 
+        PRINT*, 'Nx :', Nx
+    ELSE
+        PRINT*, 'Could not read in nx'
+        ERROR STOP
+    END IF 
+    success = get_arg('ny', Ny) .OR. get_arg('Ny', Nx)
+    IF (success) THEN 
+        PRINT*, 'Ny :', Ny
+    ELSE
+        PRINT*, 'Could not read in ny, '
+        ERROR STOP
+    END IF 
+    success = get_arg('problem', problem)
+    IF (success) THEN 
+        PRINT*, 'problem :', TRIM(problem)
+    ELSE
+        PRINT*, 'Could not read in problem'
+        ERROR STOP
+    END IF 
+    !-----------------END READ-----------------------!
     !set grid dimensions
     Nx = 20
     Ny = 20
@@ -28,7 +61,7 @@ PROGRAM MAIN
     END IF
 
     !set initial positions and velocities of particles
-    part(1)%position = (/0.0_REAL64,0.0_REAL64/)
+    part(1)%position = (/0.1_REAL64,-0.1_REAL64/)
     part(1)%velocity = (/0.0_REAL64,0.01_REAL64/)
     part(2)%position = (/0.1_REAL64,0.1_REAL64/)
     part(2)%velocity = (/0.0_REAL64,-0.01_REAL64/)
@@ -38,14 +71,29 @@ PROGRAM MAIN
     dy = (y_axis_range(2)-y_axis_range(1))/(REAL(Ny,kind=REAL64))
 
     !how long to run simulation for (timesteps)
-    total_time = 100
+    total_time = 10000
 
     !how long is each timestep
     dt = 0.01
-    
+    !Allocate the charge density grid
+    ALLOCATE(rho(1:Nx,1:Ny))
+    !generate charge density
+    IF (problem == 'null') THEN
+        CALL generate_null_charge_density
+    ELSE IF (problem == 'single') THEN
+        CALL generate_single_charge_density
+    ELSE IF (problem == 'double') THEN
+        CALL generate_double_charge_density
+    ELSE 
+        PRINT*, problem, 'is not a valid input'
+        ERROR STOP
+    END IF
+    !solve for the potential
+    CALL solve_gauss_seidel()
+    !initialise the file to write in
     CALL initialise_file(data_filename,ierr)
     !generate constant gradient potential (left to right)
-    CALL generate_const_grad_potential(-0.1_REAL64)
+    !CALL generate_const_grad_potential(-0.1_REAL64)
     !get electric field
     CALL get_field()
     !initialise particle(s) (takes array of particles or single particle)

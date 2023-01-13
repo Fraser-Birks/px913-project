@@ -11,8 +11,12 @@
 filename="main_program.f90"
 
 #All non netcdf library f90 files to compile, seperated by spaces
-myprogramfiles="data_structures.f90 create_axis.f90 testpotentialgenerator.f90 particlevelocitysolver.f90 command_line.f90 particle_write_netcdf.f90 "$filename
+myprogramfiles="data_structures.f90 create_axis.f90 chargedensitygenerator.f90 fieldsolver.f90 particlevelocitysolver.f90 command_line.f90 particle_write_netcdf.f90 "$filename
 
+nx=50
+ny=50
+problem='double'
+#Argument: 
 #Name of compiled file
 outfile="output_test_2"
 
@@ -46,4 +50,6 @@ fi
 
 #Run the game of life file with the runtime parameters specified above
 echo "Running file"
-./$outfile
+./$outfile nx=$nx ny=$ny problem=$problem
+
+python3 data_read.py

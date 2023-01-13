@@ -10,6 +10,7 @@ MODULE data_structures
     REAL(REAL64), PARAMETER :: m = 1
     REAL(REAL64), PARAMETER :: q = -1
 
+
     TYPE :: particle
         REAL(REAL64), DIMENSION(2) :: position
         REAL(REAL64), DIMENSION(2) :: velocity
@@ -35,6 +36,7 @@ MODULE data_structures
 
     REAL(REAL64), DIMENSION(:,:,:), ALLOCATABLE :: field !the placeholder to store the field once it's generated.
     REAL(REAL64), DIMENSION(:,:), ALLOCATABLE :: potential !this is placeholder array created to store a dummy potential
+    REAL(REAL64), DIMENSION(:,:), ALLOCATABLE :: rho !allocate rho (the charge density)
     REAL(REAL64) :: dy,dx,dt !variables which say how much of a step along the x axis and y axis each grid unit is and how large the timestep is.
     REAL(REAL64) :: total_time !variable which says how long the total time in the program is
     INTEGER :: Nx, Ny !How large the grid size will be

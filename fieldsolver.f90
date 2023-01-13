@@ -4,14 +4,11 @@ MODULE fieldsolver
 
     CONTAINS
 
-    SUBROUTINE solve_gauss_seidel(charge_density)
-        REAL(REAL64), DIMENSION(:,:), ALLOCATABLE, INTENT(IN) :: charge_density 
-        REAL(REAL64), DIMENSION(:,:), ALLOCATABLE :: rho, init_potential, err, num_dev
+    SUBROUTINE solve_gauss_seidel()
+        REAL(REAL64), DIMENSION(:,:), ALLOCATABLE :: init_potential, err, num_dev
         REAL(REAL64) :: tot_err, drms, norm_err, tol
         INTEGER :: i, j !loop variables
         
-        ! intialise rho with the initial charge density taken from the chargedensitygenerator
-        rho = charge_density
         ! allocate memory to the various arrays
         ! the 2D arrays range from 0 to Nx+1 and 0 to Ny+1
         ! the 1D arrays range to the total number of values within th potential array

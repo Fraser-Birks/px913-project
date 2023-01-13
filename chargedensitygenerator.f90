@@ -7,23 +7,17 @@ MODULE chargedensitygenerator
     ! Function to generate a chanrge density field in an
     ! which is 0 everywhere  
     ! Returns rho, a Nx*Ny array of REAL_64 
-    FUNCTION generate_null_charge_density() RESULT(rho)
-        REAL(REAL64), DIMENSION(:,:), ALLOCATABLE :: rho
-        ! Allocate memory
-        ALLOCATE(rho(Nx,Ny))
-
+    SUBROUTINE generate_null_charge_density()
         rho = 0.0_REAL64
-    END FUNCTION generate_null_charge_density
+    END SUBROUTINE generate_null_charge_density
 
     ! Function to return a charge density field with a single
     ! Gaussian peak at the origin.
     ! Reurns rho, a Nx*Ny array of REAL_64
-    FUNCTION generate_single_charge_density() RESULT(rho)
-        REAL(REAL64), DIMENSION(:,:), ALLOCATABLE :: rho
+    SUBROUTINE generate_single_charge_density()
         REAl(REAL64), DIMENSION(:), ALLOCATABLE :: x, y
         INTEGER :: i, j !loop integers
         ! Allocate memory for the respective arrays
-        ALLOCATE(rho(Nx,Ny))
         ALLOCATE(x(Nx))
         ALLOCATE(y(Ny))
 
@@ -45,18 +39,16 @@ MODULE chargedensitygenerator
                 rho(i,j) = exp(-((x(i)/0.1_REAL64)**2.0_REAL64) - ((y(j))/0.1_REAL64)**2.0_REAL64) 
             END DO
         END DO
-    END FUNCTION generate_single_charge_density
+    END SUBROUTINE generate_single_charge_density
 
     ! Function to return a charge density field with a double
     ! Gaussian peak at the origin.
     ! Reurns rho, a Nx*Ny array of REAL_64
-    FUNCTION generate_double_charge_density() RESULT(rho)
-        REAL(REAL64), DIMENSION(:,:), ALLOCATABLE :: rho
+    SUBROUTINE generate_double_charge_density()
         REAl(REAL64), DIMENSION(:), ALLOCATABLE :: x, y
         INTEGER :: i, j !loop integers
 
         ! Allocate memory for the respective arrays
-        ALLOCATE(rho(Nx,Ny))
         ALLOCATE(x(Nx))
         ALLOCATE(y(Ny))
 
@@ -79,6 +71,6 @@ MODULE chargedensitygenerator
                 exp(-((x(i)+0.75)/0.2)**2.0_REAL64-(((y(j)-0.75)/0.2)**2.0_REAL64)) 
             END DO
         END DO
-    END FUNCTION generate_double_charge_density
+    END SUBROUTINE generate_double_charge_density
 
 END MODULE
