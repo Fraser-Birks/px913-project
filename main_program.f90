@@ -44,9 +44,6 @@ PROGRAM MAIN
         ERROR STOP
     END IF 
     !-----------------END READ-----------------------!
-    !set grid dimensions
-    Nx = 20
-    Ny = 20
     
     !create axis
     x_axis_range = (/-1.0_REAL64,1.0_REAL64/)
@@ -96,6 +93,9 @@ PROGRAM MAIN
     !CALL generate_const_grad_potential(-0.1_REAL64)
     !get electric field
     CALL get_field()
+    !Write charge density, potential and field to file
+    CALL write_grid_vars(data_filename,ierr)
+
     !initialise particle(s) (takes array of particles or single particle)
     CALL initialise_particles(part)
 

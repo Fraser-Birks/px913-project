@@ -549,6 +549,86 @@ MODULE particle_write_netcdf
     END IF
 
   END SUBROUTINE
+
+  SUBROUTINE write_grid_vars(filename,ierr)
+    CHARACTER(LEN=*),INTENT(IN) :: filename
+    INTEGER,INTENT(OUT) :: ierr
+    INTEGER :: file_id
+    INTEGER,DIMENSION(4) :: var_ids
+    !As above, if any errors are returned by netcdf, they are caught and printed.
+    !open file to write
+    ierr = nf90_open(filename,NF90_WRITE,file_id)
+    IF (ierr /= nf90_noerr) THEN
+      PRINT*, TRIM(nf90_strerror(ierr))
+      RETURN
+    END IF
+
+    !Fetch variable ids of all variables we need to write to in the file,
+    !such that we can write to them in next step.
+
+    !Fetch ID of the charge density variable
+    ierr = nf90_inq_varid(file_id,'charge_density',var_ids(1))
+    IF (ierr /= nf90_noerr) THEN
+      PRINT*, TRIM(nf90_strerror(ierr))
+      RETURN
+    END IF
+
+    !Fetch ID of the potential variable
+    ierr = nf90_inq_varid(file_id,'potential',var_ids(2))
+    IF (ierr /= nf90_noerr) THEN
+      PRINT*, TRIM(nf90_strerror(ierr))
+      RETURN
+    END IF
+
+    !Fetch ID of the Ex variable
+    ierr = nf90_inq_varid(file_id,'Ex',var_ids(3))
+    IF (ierr /= nf90_noerr) THEN
+      PRINT*, TRIM(nf90_strerror(ierr))
+      RETURN
+    END IF
+
+    !Fetch ID of the Ey variable
+    ierr = nf90_inq_varid(file_id,'Ey',var_ids(4))
+    IF (ierr /= nf90_noerr) THEN
+      PRINT*, TRIM(nf90_strerror(ierr))
+      RETURN
+    END IF
+
+    !write charge_density
+    ierr = nf90_put_var(file_id, var_ids(1),rho)
+    IF (ierr /= nf90_noerr) THEN
+      PRINT*, TRIM(nf90_strerror(ierr))
+      RETURN
+    END IF
+
+    !write potential (from 1:Nx and 1:Ny)
+    ierr = nf90_put_var(file_id, var_ids(2),potential(1:Nx,1:Ny))
+    IF (ierr /= nf90_noerr) THEN
+      PRINT*, TRIM(nf90_strerror(ierr))
+      RETURN
+    END IF
+    
+    !write Ex
+    ierr = nf90_put_var(file_id, var_ids(3),field(:,:,1))
+    IF (ierr /= nf90_noerr) THEN
+      PRINT*, TRIM(nf90_strerror(ierr))
+      RETURN
+    END IF
+
+    !write Ey
+    ierr = nf90_put_var(file_id, var_ids(4),field(:,:,2))
+    IF (ierr /= nf90_noerr) THEN
+      PRINT*, TRIM(nf90_strerror(ierr))
+      RETURN
+    END IF
+    
+    !close the file
+    ierr = nf90_close(file_id)
+    IF (ierr /= nf90_noerr) THEN
+      PRINT*, TRIM(nf90_strerror(ierr))
+      RETURN
+    END IF
+  END SUBROUTINE
   
   SUBROUTINE write_metadata(filename,rundata,ierr)
     !This subroutine exists purely to write in the file metadata as global file attributes

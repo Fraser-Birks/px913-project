@@ -51,7 +51,6 @@ MODULE fieldsolver
             END IF
             norm_err = tot_err/drms
             init_potential = potential
-            PRINT*, norm_err
         END DO
 
     END SUBROUTINE
