@@ -14,5 +14,5 @@ time_axis = dat.variables['time'][:] #grab time axes
 
 print(part_x, part_y)
 plt.plot(part_x[:,0],part_y[:,0])
-plt.plot(part_x[:,1],part_y[:,1])
+#plt.plot(part_x[:,1],part_y[:,1])
 plt.show()

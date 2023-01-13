@@ -8,8 +8,8 @@ PROGRAM MAIN
     USE fieldsolver
     USE command_line
     IMPLICIT NONE
-    TYPE(particle),DIMENSION(:),ALLOCATABLE :: part
-    !TYPE(particle) :: part
+    !TYPE(particle),DIMENSION(:),ALLOCATABLE :: part
+    TYPE(particle) :: part
     INTEGER :: timesteps_elapsed
     INTEGER :: ierr
     CHARACTER(LEN=*), PARAMETER :: data_filename = 'particle_simulation_data'
@@ -54,17 +54,17 @@ PROGRAM MAIN
     nghosts = 0
 
     !set number of particles
-    N_particles = 2
-    IF (N_particles > 1) THEN
-        ALLOCATE(part(1:N_particles),stat=ierr)
-        IF (ierr/=0) stop 'Error allocating particles, check that they have been intialised correctly'
-    END IF
+    N_particles = 1
+    !IF (N_particles > 1) THEN
+        !ALLOCATE(part(1:N_particles),stat=ierr)
+        !IF (ierr/=0) stop 'Error allocating particles, check that they have been intialised correctly'
+    !END IF
 
     !set initial positions and velocities of particles
-    part(1)%position = (/0.1_REAL64,-0.1_REAL64/)
-    part(1)%velocity = (/0.0_REAL64,0.01_REAL64/)
-    part(2)%position = (/0.1_REAL64,0.1_REAL64/)
-    part(2)%velocity = (/0.0_REAL64,-0.01_REAL64/)
+    part%position = (/0.1_REAL64,-0.1_REAL64/)
+    part%velocity = (/0.0_REAL64,0.01_REAL64/)
+    !part(2)%position = (/0.1_REAL64,0.1_REAL64/)
+    !part(2)%velocity = (/0.0_REAL64,-0.01_REAL64/)
 
     !find dx,dy
     dx = (x_axis_range(2)-x_axis_range(1))/(REAL(Nx,kind=REAL64))
@@ -116,8 +116,8 @@ PROGRAM MAIN
 
     !print final velocity,position and acceleration
     PRINT*,'                   x component                 y component'
-    PRINT*,'final velocity',part(1)%prev_velocity
-    PRINT*,'final position',part(1)%prev_position
-    PRINT*,'final acceleration',part(1)%prev_acceleration
+    PRINT*,'final velocity',part%prev_velocity
+    PRINT*,'final position',part%prev_position
+    PRINT*,'final acceleration',part%prev_acceleration
     PRINT*,'final timesteps',timesteps_elapsed
 END PROGRAM
