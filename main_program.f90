@@ -58,8 +58,8 @@ PROGRAM MAIN
     !END IF
 
     !set initial positions and velocities of particles
-    part%position = (/0.1_REAL64,-0.1_REAL64/)
-    part%velocity = (/0.0_REAL64,0.01_REAL64/)
+    !part%position = (/0.1_REAL64,-0.1_REAL64/)
+    !part%velocity = (/0.0_REAL64,0.01_REAL64/)
     !part(2)%position = (/0.1_REAL64,0.1_REAL64/)
     !part(2)%velocity = (/0.0_REAL64,-0.01_REAL64/)
 
@@ -77,10 +77,16 @@ PROGRAM MAIN
     !generate charge density
     IF (problem == 'null') THEN
         CALL generate_null_charge_density
+        part%position = (/0.0_REAL64,0.0_REAL64/)
+        part%velocity = (/0.1_REAL64,0.1_REAL64/)
     ELSE IF (problem == 'single') THEN
         CALL generate_single_charge_density
+        part%position = (/0.1_REAL64,0.0_REAL64/)
+        part%velocity = (/0.0_REAL64,0.0_REAL64/)
     ELSE IF (problem == 'double') THEN
         CALL generate_double_charge_density
+        part%position = (/0.0_REAL64,0.5_REAL64/)
+        part%velocity = (/0.0_REAL64,0.0_REAL64/)
     ELSE 
         PRINT*, problem, 'is not a valid input'
         ERROR STOP

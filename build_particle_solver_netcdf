@@ -13,8 +13,8 @@ filename="main_program.f90"
 #All non netcdf library f90 files to compile, seperated by spaces
 myprogramfiles="data_structures.f90 create_axis.f90 chargedensitygenerator.f90 fieldsolver.f90 particlevelocitysolver.f90 command_line.f90 particle_write_netcdf.f90 "$filename
 
-nx=50
-ny=50
+nx=100
+ny=100
 problem='double'
 #Argument: 
 #Name of compiled file
