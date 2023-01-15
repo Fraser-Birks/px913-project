@@ -17,7 +17,7 @@ myprogramfiles="data_structures.f90 create_axis.f90 chargedensitygenerator.f90 f
 #-----------CHANGE RUNTIME PARAMETERS HERE----------
 nx=100
 ny=100
-problem='null'
+problem='single'
 #-------------------------------------------------
 #Argument: 
 #Name of compiled file
