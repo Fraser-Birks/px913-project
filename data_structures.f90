@@ -10,7 +10,7 @@ MODULE data_structures
     REAL(REAL64), PARAMETER :: m = 1
     REAL(REAL64), PARAMETER :: q = -1
 
-
+    !Define type which holds info about each particle
     TYPE :: particle
         REAL(REAL64), DIMENSION(2) :: position
         REAL(REAL64), DIMENSION(2) :: velocity
@@ -43,7 +43,12 @@ MODULE data_structures
     INTEGER :: N_particles !How many particles we're simulating.
     LOGICAL :: particle_out_of_bounds
 
+    !Variables to hold the x and y axes when file writing.
     REAL(REAL64), DIMENSION(:), ALLOCATABLE :: x_axis, y_axis
+    !Number of ghost cells being used (when file writing)
     INTEGER :: nghosts
     REAL(REAL64), DIMENSION(2) :: x_axis_range, y_axis_range
+
+    !Type to hold the program meta data
+    TYPE(program_metadata) :: meta_data
 END MODULE
