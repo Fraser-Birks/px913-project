@@ -1,6 +1,5 @@
 PROGRAM MAIN
     USE data_structures
-    USE testpotentialgenerator
     USE particlevelocitysolver
     USE domain_tools
     USE particle_write_netcdf
