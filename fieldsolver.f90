@@ -4,6 +4,9 @@ MODULE fieldsolver
 
     CONTAINS
 
+    ! Subroutine to implement the gauss seidel solver to find a Nx+1xNy+1 array of the potential based
+    ! on the chosen initial charge density
+    ! To find out more about the gauss seidel solver: https://en.wikipedia.org/wiki/Gauss%E2%80%93Seidel_method
     SUBROUTINE solve_gauss_seidel()
         REAL(REAL64), DIMENSION(:,:), ALLOCATABLE :: init_potential, err, num_dev
         REAL(REAL64) :: tot_err, drms, norm_err, tol
@@ -39,14 +42,11 @@ MODULE fieldsolver
         ELSE
             ! Convergence loop with convergence critetium set by the value of the normalised error being 
             ! below the tolerance
-            ! First loops through the i and j to fill the potential array, which is being updated after each iteration
-            ! The new potential array is then used to determine the error and the numberical derivative via a seperate loop 
-            ! through i and j
-            ! These are used to determine the norm_error
             max_iters = 100000
             iters = 0
             DO WHILE ((norm_err >= tol).AND.(iters<max_iters))
                 iters = iters+1
+                ! Loops through the i and j to fill the potential array, which is being updated after each iteration
                 DO j = 1, Ny
                     DO i = 1, Nx
                         potential(i,j) = -(rho(i,j)-((init_potential(i+1,j)+init_potential(i-1,j))/dx**2)- &
@@ -54,6 +54,7 @@ MODULE fieldsolver
                         init_potential(i,j) = potential(i,j)
                     END DO
                 END DO
+                ! Loop to determine the error and the numerical derivative based on the determined potetntial array
                 DO j = 1,Ny
                     DO i = 1,Nx
                         err(i,j) = abs(((potential(i-1,j)-2.0_REAL64*potential(i,j)+potential(i+1,j))/dx**2)+ &
@@ -62,15 +63,19 @@ MODULE fieldsolver
                         ((potential(i,j-1)-2.0_REAL64*potential(i,j)+potential(i,j+1))/dy**2))**2
                     END DO
                 END DO
+                ! calculate total error and root mean sqared t obtaine the normalised error
                 tot_err = sum(err)
                 drms = sqrt((1.0_REAL64/SIZE(err))*sum(num_dev))
-                IF (drms == 0.0_REAL64) THEN
+                 !force stop the loop if drms is 0, as this would otherwise break the loop
+                IF (drms == 0.0_REAL64) THEN 
+                    PRINT*, 'Drms is 0.'
                     error stop
                 END IF
                 norm_err = tot_err/drms
                 init_potential = potential
             END DO
 
+            ! Print out information on whether convergence has been reached and if so, in how many iterations
             IF (iters == max_iters) THEN
                 PRINT*, 'Gauss-Seidel solver exited after', max_iters, 'iterations with no convergence.'
                 error stop

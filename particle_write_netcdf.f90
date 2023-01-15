@@ -193,6 +193,7 @@ MODULE particle_write_netcdf
     !Create full x axis array:
     !(note that we need to set n_ghosts to 0 
     !as we are only saving axis values in the bulk of the array.)
+    !The module create_axis was provided by H Ratcliffe and C Brady
     CALL create_axis(x_axis,Nx,x_axis_range)
     !Create full y axis array
     CALL create_axis(y_axis,Ny,y_axis_range)

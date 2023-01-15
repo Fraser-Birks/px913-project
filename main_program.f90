@@ -17,6 +17,7 @@ PROGRAM MAIN
     LOGICAL :: success
     !----------------------READ FROM COMMAND LINE----------------------!
     ! Calls and storts all the arguments passed in via the command line
+    ! using the module provided by H Ratcliffe
     CALL parse_args
     ! Checks each argument provided is of the right type and ensures that both
     ! lower and upper case variable names are recognised
