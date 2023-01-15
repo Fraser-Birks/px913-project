@@ -21,7 +21,7 @@ problem='double'
 #-------------------------------------------------
 #Argument: 
 #Name of compiled file
-outfile="output_test_2"
+outfile="particles_in_field"
 
 #Name of compiler
 fc=gfortran
