@@ -22,6 +22,9 @@ MODULE particlevelocitysolver
     END SUBROUTINE
     
     IMPURE ELEMENTAL SUBROUTINE initialise_particles(part)
+        !Function to get the initial accelerations for the particles
+        !Takes following input:
+        !part:either an array of particle objects or single particle
         TYPE(particle), INTENT(INOUT) :: part
         INTEGER, DIMENSION(2) :: cell_coords
         REAL(REAL64) :: Ex,Ey
@@ -40,7 +43,10 @@ MODULE particlevelocitysolver
     END SUBROUTINE
 
     FUNCTION update_acceleration(field_valX, field_valY)
-        REAL(REAL64) :: field_valX, field_valY
+        !Function that calculates the acceleration of a particle
+        !based on it's position in the electric field
+        !Returns the x and y components of the acceleration of a particle.
+        REAL(REAL64), INTENT(IN) :: field_valX, field_valY
         REAL(REAL64), DIMENSION(2) :: update_acceleration
         !update acceleration
         update_acceleration(1) = q*(field_valX)/m
@@ -49,12 +55,14 @@ MODULE particlevelocitysolver
 
 
     IMPURE ELEMENTAL SUBROUTINE propagate(part)
-        !cell_x = FLOOR((part_x + 1.0_dp)/dx) + 1
-        !Subroutine which takes in a given particle (can do in an elemental way) and propagates it one timestep.
+        !Subroutine which takes in a given particle (or array of particles)
+        !and propagates it (them) one timestep. Using the velocity verlet algorithm. 
+        !To read more about the velocity verlet algorithm, see: https://en.wikipedia.org/wiki/Verlet_integration
         TYPE(particle), INTENT(INOUT) :: part
         INTEGER, DIMENSION(2) :: cell_coords
         REAL(REAL64) :: Ex, Ey
-        !first, set all 'current' particle parameters to 'previous' ones (these are nth in the algorithm)
+        !first, set all 'previous' particle parameters to be the same as the 'current' ones
+        !from the previous timestep.
         part%prev_position = part%position
         part%prev_velocity = part%velocity
         part%prev_acceleration = part%acceleration
@@ -76,6 +84,8 @@ MODULE particlevelocitysolver
         !get the new velocity of the particle
         part%velocity = part%prev_velocity + dt*((part%acceleration + part%prev_acceleration)*0.5_REAL64)
 
+        !Run a check to see if any of the particles are now out of bounds.
+        !If they are, then break out of the loop in main_program
         IF (.NOT.(((cell_coords(1) < Nx+1).AND.(cell_coords(1)>0).AND.(cell_coords(2)>0).AND.(cell_coords(2)<Ny+1)))) THEN
             particle_out_of_bounds=.TRUE.
         END IF

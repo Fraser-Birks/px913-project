@@ -13,9 +13,12 @@ filename="main_program.f90"
 #All non netcdf library f90 files to compile, seperated by spaces
 myprogramfiles="data_structures.f90 create_axis.f90 chargedensitygenerator.f90 fieldsolver.f90 particlevelocitysolver.f90 command_line.f90 particle_write_netcdf.f90 "$filename
 
+
+#-----------CHANGE RUNTIME PARAMETERS HERE----------
 nx=100
 ny=100
-problem='double'
+problem='null'
+#-------------------------------------------------
 #Argument: 
 #Name of compiled file
 outfile="output_test_2"
@@ -48,8 +51,8 @@ else
     echo "Compile succeeded without warnings"
 fi
 
-#Run the game of life file with the runtime parameters specified above
+#Run the file with the runtime parameters specified above
 echo "Running file"
 ./$outfile nx=$nx ny=$ny problem=$problem
 
-python3 data_read.py
+python3 plot.py

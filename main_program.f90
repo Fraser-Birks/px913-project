@@ -46,6 +46,11 @@ PROGRAM MAIN
     END IF 
     !-----------------END READ-----------------------!
     
+    !-------------SAVE META DATA FOR WRITING LATER-----!
+    meta_data%namestring = 'build_particle_solver_netcdf'
+    WRITE(meta_data%commandlineargs,*) 'Nx=',Nx,' Ny=',Ny,' problem=',&
+                                    problem
+    !---------------------------------------------------!
     !create axis
     x_axis_range = (/-1.0_REAL64,1.0_REAL64/)
     y_axis_range = (/-1.0_REAL64,1.0_REAL64/)
@@ -69,7 +74,7 @@ PROGRAM MAIN
     dy = (y_axis_range(2)-y_axis_range(1))/(REAL(Ny,kind=REAL64))
 
     !how long to run simulation for (timesteps)
-    total_time = 10000
+    total_time = 1000
 
     !how long is each timestep
     dt = 0.01
@@ -127,4 +132,7 @@ PROGRAM MAIN
     PRINT*,'final position',part%prev_position
     PRINT*,'final acceleration',part%prev_acceleration
     PRINT*,'final timesteps',timesteps_elapsed
+
+    !Write metadata to file
+    CALL write_metadata(data_filename,ierr)
 END PROGRAM

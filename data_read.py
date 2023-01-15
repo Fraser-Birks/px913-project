@@ -1,7 +1,7 @@
 import netCDF4 as NC
 import matplotlib.pyplot as plt
 dat = NC.Dataset("particle_simulation_data","r", format="NETCDF4")
-
+print(dat.command_line_args)
 Ex = dat.variables['Ex'][:]
 part_x = dat.variables['part_x'][:]
 part_y = dat.variables['part_y'][:]

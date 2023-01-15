@@ -8,6 +8,7 @@ MODULE particle_write_netcdf
   IMPLICIT NONE
 
 
+
   INTERFACE write_to_file
     MODULE PROCEDURE write_single_particle_to_file
 
@@ -26,7 +27,7 @@ MODULE particle_write_netcdf
     INTEGER,INTENT(OUT) :: ierr
     CHARACTER(LEN=*),INTENT(IN) :: filename
 
-    !The file needs to have 9 dimensions, x, y, part_x, part_y, vx, vy, ax, ay and time, so ndims = 9
+    !The file needs to have 4 dimensions, the x and y axes for the grid, the number of particles and the timesteps.
     INTEGER, PARAMETER :: ndims = 4
     
     !griddims holds the length of each dimension for easy initialisation
@@ -234,13 +235,13 @@ MODULE particle_write_netcdf
 
   SUBROUTINE write_single_particle_to_file(filename,curr_timestep,single_part,ierr)
 
-  !This function opens the file, writes the particle position, velocity, acceleration
+    !This function opens the file, writes (for a SINGLE particle) the particle position, velocity, acceleration
     !and the current corresponding timestep to the file.
 
     !This function takes the following arguments:
     !The current timestep - which is the value to write to the time axis
     !ierr - an integer to hold error codes.
-    !part - an array of particle types
+    !part - a single particle type
     !filename - the filename to write to.
     
     INTEGER, INTENT(IN) :: curr_timestep
@@ -392,13 +393,13 @@ MODULE particle_write_netcdf
   END SUBROUTINE
 
   SUBROUTINE write_particle_array_to_file(filename,curr_timestep,part_arr,ierr)
-    !This function opens the file, writes the particle position, velocity, acceleration
-    !and the current corresponding timestep to the file.
+    !This function opens the file, writes the particle positions, velocitys, accelerations
+    !and the current corresponding timestep to the file. This function works for an ARRAY of particles
 
     !This function takes the following arguments:
     !The current timestep - which is the value to write to the time axis
     !ierr - an integer to hold error codes.
-    !part - an array of particle types
+    !part_arr - an array of particle types
     !filename - the filename to write to.
 
     INTEGER, INTENT(IN) :: curr_timestep
@@ -552,6 +553,11 @@ MODULE particle_write_netcdf
   END SUBROUTINE
 
   SUBROUTINE write_grid_vars(filename,ierr)
+    !This function writes the following to the file:
+    ! Charge density
+    ! Potential
+    ! Ex
+    ! Ey
     CHARACTER(LEN=*),INTENT(IN) :: filename
     INTEGER,INTENT(OUT) :: ierr
     INTEGER :: file_id
@@ -631,7 +637,7 @@ MODULE particle_write_netcdf
     END IF
   END SUBROUTINE
   
-  SUBROUTINE write_metadata(filename,rundata,ierr)
+  SUBROUTINE write_metadata(filename,ierr)
     !This subroutine exists purely to write in the file metadata as global file attributes
     !It takes the type rundata as an argument, which should contain within it
     !all of the metadata the user wishes to write to the file.
@@ -640,7 +646,6 @@ MODULE particle_write_netcdf
     !ierr is a value to hold the error codes
     !rundata is of the type program_metadata, and holds metadata the user defines.
     CHARACTER(LEN=*),INTENT(IN) :: filename
-    TYPE(program_metadata), INTENT(IN) :: rundata
     INTEGER, INTENT(OUT):: ierr
     INTEGER :: file_id
     !open file to write
@@ -662,14 +667,14 @@ MODULE particle_write_netcdf
     !use NF90_GLOBAL to write these as global attributes.
 
     !Write generating file name and version to file
-    ierr = nf90_put_att(file_id, NF90_GLOBAL,'name_and_version',TRIM(rundata%namestring))
+    ierr = nf90_put_att(file_id, NF90_GLOBAL,'name_and_version',TRIM(meta_data%namestring))
     IF (ierr /= nf90_noerr) THEN
       PRINT*, TRIM(nf90_strerror(ierr))
       RETURN
     END IF
 
     !add full string of command line arguments used to file.
-    ierr = nf90_put_att(file_id, NF90_GLOBAL,'command_line_args',TRIM(rundata%commandlineargs))
+    ierr = nf90_put_att(file_id, NF90_GLOBAL,'command_line_args',TRIM(meta_data%commandlineargs))
     IF (ierr /= nf90_noerr) THEN
       PRINT*, TRIM(nf90_strerror(ierr))
       RETURN
